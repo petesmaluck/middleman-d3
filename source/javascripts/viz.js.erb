@@ -1,6 +1,6 @@
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
+var margin = {top: 20, right: 20, bottom: 30, left: 30},
+    width = 660 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
@@ -19,10 +19,10 @@ var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left");
 
-var area = d3.svg.area()
+var line = d3.svg.line()
     .x(function(d) { return x(d.date); })
-    .y0(function(d) { return y(d.low); })
-    .y1(function(d) { return y(d.high); });
+    .y(function(d) { return y(d.low); })
+    .interpolate("cardinal");
 
 var svg = d3.select("#vis").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -49,12 +49,12 @@ var data = d3.tsv.parse(data_embed['data.tsv'], function(d) {
 });
 
 x.domain(d3.extent(data, function(d) { return d.date; }));
-y.domain([d3.min(data, function(d) { return d.low; }), d3.max(data, function(d) { return d.high; })]);
+y.domain([d3.min(data, function(d) { return d.low - 2; }), d3.max(data, function(d) { return d.low; })]);
 
 svg.append("path")
     .datum(data)
     .attr("class", "area")
-    .attr("d", area);
+    .attr("d", line);
 
 svg.append("g")
     .attr("class", "x axis")
@@ -75,7 +75,6 @@ svg.append("g")
 svg.selectAll("image").data([0])
   .enter()
   .append("svg:image")
-  .attr("xlink:href", "<%= inline data_uri('images/middleman.png', 'image/png') %>")
   .attr("x", width - 55)
   .attr("y", 5)
   .attr("width", "50")

@@ -1,6 +1,28 @@
+@import "bourbon";
+@import "neat";
+
+
+@font-face {
+    font-family: "helvetica";
+    src: url("../fonts/helvetica.ttf");
+}
+
+@font-face {
+    font-family: "helvetica-thin";
+    src: url("../fonts/helvetica-thin.ttf");
+}
+
 
 body {
   padding: 1em;
+  font-family: helvetica;
+  margin: 0 auto;
+  max-width: 1000px;
+  //letter-spacing: -0.02em;
+
+  p {
+    font-size: 0.8em;
+  }
 }
 
 svg {
@@ -14,11 +36,26 @@ svg {
   }
 
   .x.axis path {
-    display: none;
+    
   }
 
   .area {
-    fill: steelblue;
+    fill: none;
+    stroke: steelblue;
+  }
+  text {
+    font-family: helvetica;
   }
 }
 
+
+//table-layout
+.container {
+  @include outer-container;
+}
+.span3 {
+  @include span-columns(3);
+}
+.span9 {
+  @include span-columns(9);
+}

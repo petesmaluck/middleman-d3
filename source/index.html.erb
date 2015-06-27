@@ -1,5 +1,5 @@
 ---
-title: "static d3 example"
+title: "Blue Jays Home Run tally"
 ---
 
 <!-- adapted from http://bl.ocks.org/mbostock/3884914 -->
@@ -8,25 +8,20 @@ title: "static d3 example"
 
 
 <h1><%= current_page.data.title %></h1>
+	<div class="container">
+	<div class="span3">
+	  
+	  <h3>Pete smaluck</h3>
+	  <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede.</p>
 
-<div>
-  
-  <p>This is an adaptation of the "Bivariate Area Chart" 
-    <%= link_to 'demonstration', 'http://bl.ocks.org/mbostock/3884914' %> 
-    of <%= link_to 'd3.js', 'http://d3js.org/' %> compiled into a static 
-    HTML file using the <%= link_to 'middleman-static-d3', 'https://github.com/coldnebo/middleman-static-d3' %> template.</p>
+	  <p>Donec nec justo eget felis facilisis fermentum. Aliquam porttitor mauris sit amet orci. Aenean dignissim pellentesque felis.</p>
 
-  <p>Everything you see on this page exists in a single self-contained file that can be viewed anywhere.</p>
+	  <p>Morbi in sem quis dui placerat ornare. Pellentesque odio nisi, euismod in, pharetra a, ultricies in, diam. Sed arcu. Cras consequat.</p>
+	</div>
 
-  <%# example of embedding an image %>
-  <img src="<%= data_uri('images/middleman.png', 'image/png') %>" style="width: 50px;" />
-  
+	<div class="span9" id="vis"></div>
 </div>
-
-<div id="vis"></div>
-
 <div>
-  <h2>data.tsv</h2>
   <pre id="display_data"></pre>
 </div>
 
@@ -36,6 +31,6 @@ title: "static d3 example"
 <%= javascript_embed 'viz' %>
 
 <%# simple coffeescript example to fill display_data. %>
-<%= javascript_embed 'show_data' %>
+<%# javascript_embed 'show_data' %>
 
 

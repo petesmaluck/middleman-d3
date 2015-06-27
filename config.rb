@@ -63,6 +63,8 @@ set :images_dir, 'images'
 
 set :data_dir, 'data'
 
+activate :neat
+
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment
