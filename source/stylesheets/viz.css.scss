@@ -12,19 +12,69 @@
     src: url("../fonts/helvetica-thin.ttf");
 }
 
+@font-face {
+    font-family: "GGX88";
+    src: url("../fonts/GGX88.ttf");
+}
+
+@font-face {
+    font-family: "parade-marble";
+    src: url("../fonts/parade-marble.otf");
+}
+
+@font-face {
+    font-family: "parade-one";
+    src: url("../fonts/parade-one.otf");
+}
+
 
 body {
   padding: 1em;
   font-family: helvetica;
   margin: 0 auto;
-  max-width: 1000px;
-  //letter-spacing: -0.02em;
+  color: #222;  
+
 
   p {
-    font-size: 0.8em;
+    font-size: .9em;
+    text-align: justify;
+    line-height: 1.4;
+    &.no-margin {
+      margin: 0;
+    }
+  }
+  h1 {
+    font-size: 13vw;
+    margin: 0;
+    font-family: parade-one;
+    line-height: 1;
+    text-align: center;
+  }
+  h2 {
+    font-size: 2em;
+    margin: 0;
+    font-family: GGX88;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    &.border-top {
+      border-top: 5px solid #222;
+      padding-top: 0.3em;
+      margin-bottom: 1em;
+    }
+  }
+  h4 {
+    font-size: 1em;
+    margin: 0.2em 0 1em;
+    font-family: GGX88;
+    padding-top: 4px;
+  }
+  span {
+    font-size: 0.5em;
+    line-height: 0.6;
   }
 }
 
+//Chart
 svg {
   font: 10px sans-serif;
 
@@ -41,21 +91,66 @@ svg {
 
   .area {
     fill: none;
-    stroke: steelblue;
+    stroke: #222; 
   }
   text {
-    font-family: helvetica;
+    font-family: parade-hawai;
+    fill: #222; 
   }
 }
 
+//Margin/Padding
+
+.body-text {
+  //margin-top: 3em;
+}
+
+p.column-2 {
+    -webkit-column-count: 2; /* Chrome, Safari, Opera */
+    -moz-column-count: 2; /* Firefox */
+    column-count: 2;
+    -webkit-column-gap: 2em;
+    -moz-column-gap: 2em;
+    column-gap: 2em;
+    &.border {
+      -webkit-column-rule: 1px outset #222; /* Chrome, Safari, Opera */
+      -moz-column-rule: 1px outset #222; /* Firefox */
+      column-rule-color: 1px outset #222;
+    }
+    display: block;
+}
+
+//Border
+.border-right {
+  border-right: 1px solid #222;
+  margin-right: 0em;
+  padding-right: 1em;
+}
 
 //table-layout
 .container {
   @include outer-container;
+  max-width: 1000px;
+  margin: 5em auto 0;
 }
-.span3 {
-  @include span-columns(3);
+.span4 {
+  @include span-columns(4);
+  &.right4 {
+    @include span-columns(4);
+    @include shift(4);
+  }
 }
-.span9 {
-  @include span-columns(9);
+.span8 {
+  @include span-columns(8);
+    &.right4 {
+    @include span-columns(8);
+    @include shift(4);
+  }
+}
+.span6 {
+  width: 50%;
+  margin-bottom: 0;
+}
+.span12{
+  @include fill-parent;
 }
