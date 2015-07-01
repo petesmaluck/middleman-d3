@@ -1,11 +1,11 @@
 
 var margin = {top: 20, right: 20, bottom: 30, left: 30},
     width = 660 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 350 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
 
-var x = d3.time.scale()
+var x = d3.scale.linear()
     .range([0, width]);
 
 var y = d3.scale.linear()
@@ -19,9 +19,21 @@ var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left");
 
+//Drawing curves
+
+var set = [];
+
+  for (i=0; i < 100; i++) {
+    for (j=0; j < 2; j++) {
+      set.push({i, j});
+    }
+  } 
+
+console.log(JSON.stringify(set));
+
 var line = d3.svg.line()
-    .x(function(d) { return x(d.date); })
-    .y(function(d) { return y(d.low); })
+    .x(function(d) { drawGraph;})
+    .y(function(d) { drawGraph; })
     .interpolate("cardinal");
 
 var svg = d3.select("#vis").append("svg")
@@ -40,21 +52,28 @@ var svg = d3.select("#vis").append("svg")
 //
 // which won't work. instead, we have to parse the data_embed 
 // we added to the page above like this:
-var data = d3.tsv.parse(data_embed['data.tsv'], function(d) {
+var data = d3.csv.parse(data_embed['homeruns.csv'], function(d, i) {
   return {
-    date: parseDate(d.date),
-    low: +d.low,
-    high: +d.high
+    index: +i,
+    hitter: d.Hitter,
+    distance: +d.TrueDist,
+    speed: +d.SpeedOffBat,
+    elevation_angle: +d.Elev_Angle,
+    apex: +d.Apex
   };
 });
 
-x.domain(d3.extent(data, function(d) { return d.date; }));
-y.domain([d3.min(data, function(d) { return d.low - 2; }), d3.max(data, function(d) { return d.low; })]);
+//console.log(JSON.stringify(data));
 
-svg.append("path")
+x.domain([0, d3.max(data, function(d) { return d.distance + 10; })]);
+y.domain([0, d3.max(data, function(d) { return d.apex + 10; })]);
+
+/*
+  svg.append("path")
     .datum(data)
     .attr("class", "area")
     .attr("d", line);
+*/
 
 svg.append("g")
     .attr("class", "x axis")
@@ -69,7 +88,7 @@ svg.append("g")
     .attr("y", 6)
     .attr("dy", ".71em")
     .style("text-anchor", "end")
-    .text("Temperature (ºF)");
+    .text("height (ft)");
 
 // optional image insert inside svg example:
 svg.selectAll("image").data([0])
