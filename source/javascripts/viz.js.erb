@@ -1,40 +1,59 @@
-
-var margin = {top: 20, right: 20, bottom: 30, left: 30},
+var margin = {top: 5, right: 20, bottom: 1, left: 50},
     width = 660 - margin.left - margin.right,
-    height = 350 - margin.top - margin.bottom;
+    height = 320 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y%m%d").parse;
 
-var x = d3.scale.linear()
-    .range([0, width]);
+function toDegrees (angle) {
+  return angle * ( Math.PI / 180 );
+}
 
-var y = d3.scale.linear()
-    .range([height, 0]);
+//Linear Drag
+//http://ww2.odu.edu/~agodunov/teaching/phys420/files/Erlichson.pdf
+
+var curves = [];
+
+var data = d3.csv.parse(data_embed['homeruns.csv'], function(d, i) {
+
+  var curve = [];
+  
+  for (var i = 0; i < 6; i++) {
+     
+    var g = 32;                       //gravity
+    
+    var e = -0.35*i;                  //c
+    var c = 1/0.35;  
+
+    var v = d.SpeedOffBat * 1.46667;  //mph to ft/s
+    var a = d.Elev_Angle;             //Angle
+
+    var x = c * v * ( Math.cos( toDegrees(a) ) ) * ( 1 - Math.exp(e) )/2;
+    var y = c * ( c * g + v * Math.sin( toDegrees(a) ) ) * (1 - Math.exp(e)) - (c * g * i - 3);
+    
+    curve[i] = {x, y};
+  }
+  curves.push(curve);
+});
+
+console.log(JSON.stringify(curves));
+
+var xScale = d3.scale.linear()
+      .domain([0, 200])
+      .range([ 0, width ]);
+
+var yScale = d3.scale.linear()
+      .domain([0, 90])
+      .range([ height, 0 ]);
 
 var xAxis = d3.svg.axis()
-    .scale(x)
+    .scale(xScale)
+    .ticks(0)
     .orient("bottom");
 
 var yAxis = d3.svg.axis()
-    .scale(y)
+    .scale(yScale)
+    .ticks(0)
     .orient("left");
-
-//Drawing curves
-
-var set = [];
-
-  for (i=0; i < 100; i++) {
-    for (j=0; j < 2; j++) {
-      set.push({i, j});
-    }
-  } 
-
-console.log(JSON.stringify(set));
-
-var line = d3.svg.line()
-    .x(function(d) { drawGraph;})
-    .y(function(d) { drawGraph; })
-    .interpolate("cardinal");
 
 var svg = d3.select("#vis").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -42,43 +61,27 @@ var svg = d3.select("#vis").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-// the original data was loaded via:
-// d3.tsv("data.tsv", function(error, data) {
-//   data.forEach(function(d) {
-//     d.date = parseDate(d.date);
-//     d.low = +d.low;
-//     d.high = +d.high;
-//   });
-//
-// which won't work. instead, we have to parse the data_embed 
-// we added to the page above like this:
-var data = d3.csv.parse(data_embed['homeruns.csv'], function(d, i) {
-  return {
-    index: +i,
-    hitter: d.Hitter,
-    distance: +d.TrueDist,
-    speed: +d.SpeedOffBat,
-    elevation_angle: +d.Elev_Angle,
-    apex: +d.Apex
-  };
-});
+var line = d3.svg.line()
+      .interpolate('cardinal')
+      .x(function(d){ return xScale(d.x) })
+      .y(function(d){ return yScale(d.y) });
 
-//console.log(JSON.stringify(data));
-
-x.domain([0, d3.max(data, function(d) { return d.distance + 10; })]);
-y.domain([0, d3.max(data, function(d) { return d.apex + 10; })]);
-
-/*
-  svg.append("path")
-    .datum(data)
-    .attr("class", "area")
+var path = svg.selectAll(".line")
+    .data(curves)
+  .enter().append("path")
+    .attr("class", "line")
     .attr("d", line);
-*/
 
 svg.append("g")
     .attr("class", "x axis")
     .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
+    .call(xAxis)
+  .append("text")
+    .attr("y", 6)
+    .attr("dy", "-1em")
+    .attr("dx", width)
+    .style("text-anchor", "end")
+    .text("distance (ft)");
 
 svg.append("g")
     .attr("class", "y axis")
@@ -89,13 +92,4 @@ svg.append("g")
     .attr("dy", ".71em")
     .style("text-anchor", "end")
     .text("height (ft)");
-
-// optional image insert inside svg example:
-svg.selectAll("image").data([0])
-  .enter()
-  .append("svg:image")
-  .attr("x", width - 55)
-  .attr("y", 5)
-  .attr("width", "50")
-  .attr("height", "50");
 
